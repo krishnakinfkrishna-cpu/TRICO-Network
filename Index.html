@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+    <title>Trico Network</title>
+    <style>
+        :root{--p:#673AB7;--s:#4CAF50;--b:#f8f9ff;--w:#fff;--t:#2d3436;--glow:rgba(103,58,183,0.3);--sglow:rgba(76,175,80,0.6)}
+        body{text-align:center;font-family:'Segoe UI',sans-serif;background:var(--b);margin:0;height:100vh;display:flex;flex-direction:column;overflow:hidden}
+        .page{display:none;flex-direction:column;height:100%;overflow-y:auto;padding-bottom:200px} 
+        .active{display:flex}
+        .header-bar{background:var(--p);color:var(--w);padding:18px;font-weight:bold;font-size:16px;letter-spacing:1px}
+        #n{font-size:45px;color:var(--p);font-weight:900;margin:15px 0 5px}
+        .rate-chip{display:inline-block;background:var(--glow);color:var(--p);padding:5px 15px;border-radius:20px;font-size:12px;font-weight:bold;margin-bottom:10px}
+        .mining-section {width: 100%;display: flex;justify-content: center;align-items: center;margin: 10px 0;}
+        .mining-container {position: relative;width: 60vw;height: 60vw;max-width: 210px;max-height: 210px;display: flex;align-items: center;justify-content: center;}
+        .outer-ring {position: absolute;inset: 0;border-radius: 50%;border: 5px solid rgba(0,0,0,0.05);}
+        .on-ring {border-top-color: var(--s);border-bottom-color: var(--s);animation: spin-ring 2s linear infinite;}
+        .btn-m {width: 78%;height: 78%;border-radius: 50%;background: var(--p);color: var(--w);font-size: 55px;border: 8px solid var(--w);cursor: pointer;z-index: 5;box-shadow: 0 10px 25px rgba(0,0,0,0.12);}
+        .on-btn {background: var(--s) !important;}
+        .wave {position: absolute;width: 78%;height: 78%;border-radius: 50%;background: var(--s);opacity: 0;z-index: 1;}
+        .on-wave {animation: power-pulse 2s infinite;}
+        @keyframes spin-ring {0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); }}
+        @keyframes power-pulse {0% { transform: scale(1); opacity: 0.4; } 100% { transform: scale(1.6); opacity: 0; }}
+        .roadmap-card {background: var(--w);margin: 20px;padding: 20px;border-radius: 25px;text-align: left;box-shadow: 0 10px 30px rgba(103,58,183,0.08);border: 1px solid rgba(103,58,183,0.1);}
+        .phase-item {display: flex;align-items: center;gap: 12px;margin-bottom: 12px;}
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .dot-active { background: var(--s); box-shadow: 0 0 10px var(--sglow); }
+        .dot-soon { background: #dfe6e9; }
+        .phase-text { font-size: 14px; font-weight: 600; color: #636e72; }
+        .phase-active { color: var(--t); }
+        .name-wrapper { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 100%; margin-top: 10px; }
+        #user-name { border: none; background: transparent; font-size: 24px; font-weight: bold; text-align: center; color: var(--t); outline: none; width: 70%; transition: 0.3s; }
+        #name-btn { position: absolute; right: 15%; background: none; border: none; font-size: 20px; cursor: pointer; }
+        .nav{position:fixed;bottom:50px; left:20px; right:20px; height:75px;background:var(--w);display:flex;justify-content:space-around;align-items:center;box-shadow:0 10px 40px rgba(0,0,0,0.1);z-index:1000; border-radius:25px;}
+        .ni{text-align:center;color:#b2bec3;font-size:11px;font-weight:bold;cursor:pointer;flex:1}
+        .ani{color:var(--p)}
+    </style>
+</head>
+<body>
+
+<div id="main-app" style="display:flex;flex-direction:column;height:100%">
+    <div id="p1" class="page active">
+        <div class="header-bar">TRICO NETWORK</div>
+        <div id="n">0.000000 T</div>
+        <div class="rate-chip">⚡ 2 Trico/hr</div>
+        <div class="mining-section">
+            <div class="mining-container">
+                <div id="ring" class="outer-ring"></div>
+                <div id="p-wave" class="wave"></div>
+                <button class="btn-m" id="mbtn" onclick="toggleMining()">⚡</button>
+            </div>
+        </div>
+        <div style="background:#1a1a2e;color:#00ffcc;padding:12px;margin:0 20px 10px;border-radius:18px;font-family:monospace;font-size:11px;text-align:left;border-left:3px solid var(--p)">> [SYSTEM] Trico Mining Node Ready...</div>
+        <div class="roadmap-card">
+            <div style="color:var(--p); font-weight:bold; font-size:16px; margin-bottom:15px; display:flex; align-items:center; gap:8px;">🚀 Project Roadmap</div>
+            <div class="phase-item"><div class="dot dot-active"></div><div class="phase-text phase-active">Phase 1: Mining (Active)</div></div>
+            <div class="phase-item"><div class="dot dot-soon"></div><div class="phase-text">Phase 2: Wallet (Coming Soon)</div></div>
+            <div class="phase-item"><div class="dot dot-soon"></div><div class="phase-text">Phase 3: Listing (Coming Soon)</div></div>
+        </div>
+    </div>
+
+    <div id="p3" class="page">
+        <div class="header-bar">MY ACCOUNT</div>
+        <div style="padding:25px">
+            <div onclick="document.getElementById('p-upload').click()" style="width:100px; height:100px; background:var(--glow); border-radius:50%; margin:0 auto 10px; display:flex; align-items:center; justify-content:center; overflow:hidden; border:4px solid white; cursor:pointer; position:relative; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
+                <span id="p-icon" style="font-size:50px; color:var(--p)">👤</span>
+                <img id="p-img" src="" style="width:100%; height:100%; object-fit:cover; display:none;">
+            </div>
+            <input type="file" id="p-upload" accept="image/*" style="display:none" onchange="previewImage(this)">
+            <div class="name-wrapper">
+                <input type="text" id="user-name" value="Miner #786" disabled>
+                <button id="name-btn" onclick="toggleNameEdit()">✏️</button>
+            </div>
+            <p style="color:var(--s); font-weight:bold; font-size:14px; margin-top:5px">Trico Pioneer ✅</p>
+        </div>
+        <div style="background:linear-gradient(135deg, #5c4db1, #4a69bd); color:white; margin:10px 20px; padding:25px 20px; border-radius:35px; text-align:left;">
+            <p style="margin:0; font-size:13px; opacity:0.9;">Referral Power</p>
+            <h1 style="margin:8px 0 0; font-size:28px; display:flex; align-items:center; gap:10px;"><span style="font-size:32px;">👥</span> 4 Active Miners</h1>
+        </div>
+        <div style="padding:0 20px">
+            <button onclick="share()" style="width:100%; background:#FFC107; border:none; padding:18px; border-radius:20px; font-weight:bold; margin:20px 0 12px; font-size:16px;">📢 INVITE FRIENDS</button>
+            <button onclick="logout()" style="width:100%; background:#f1f2f6; color:#f44336; border:none; padding:14px; border-radius:20px; font-weight:bold;">LOGOUT</button>
+        </div>
+    </div>
+
+    <div class="nav">
+        <div class="ni ani" onclick="tab('p1',this)">⛏️<br>Mine</div>
+        <div class="ni" onclick="tab('p3',this)">👤<br>Account</div>
+    </div>
+</div>
+
+<script>
+var db = localStorage; 
+var bal = 0; // Fixed: Bal variable defined
+var miningInterval; // Fixed: Interval tracker
+
+// Persistent Loading Logic
+window.onload = function() {
+    // 1. Balance Load
+    let savedBal = db.getItem("trico_b");
+    if(savedBal) { bal = parseFloat(savedBal); updateDisplay(); }
+    
+    // 2. Mining State Load
+    if(db.getItem("is_mining") === "true") { startUI(); }
+    
+    // 3. Profile/Name Load
+    if(db.getItem("user_profile_pic")) { document.getElementById('p-img').src = db.getItem("user_profile_pic"); document.getElementById('p-img').style.display = 'block'; document.getElementById('p-icon').style.display = 'none'; }
+    if(db.getItem("user_display_name")) { document.getElementById('user-name').value = db.getItem("user_display_name"); }
+}
+
+function toggleNameEdit() { 
+    let input = document.getElementById('user-name'); let btn = document.getElementById('name-btn'); 
+    if(input.disabled) { input.disabled = false; input.focus(); btn.innerHTML = "💾"; } 
+    else { input.disabled = true; btn.innerHTML = "✏️"; db.setItem("user_display_name", input.value); } 
+}
+
+function startUI() { 
+    document.getElementById("mbtn").classList.add("on-btn"); 
+    document.getElementById("ring").classList.add("on-ring"); 
+    document.getElementById("p-wave").classList.add("on-wave"); 
+    db.setItem("is_mining", "true");
+    
+    // Fixed: Clear old interval before starting new one
+    if(miningInterval) clearInterval(miningInterval); 
+    
+    miningInterval = setInterval(() => { 
+        bal += 0.00055556; 
+        updateDisplay(); 
+        db.setItem("trico_b", bal); 
+    }, 1000); 
+}
+
+function toggleMining() { if(db.getItem("is_mining") !== "true") { startUI(); } }
+function updateDisplay() { document.getElementById("n").innerHTML = bal.toFixed(6) + " T"; }
+function tab(id, el){ document.querySelectorAll('.page').forEach(p=>p.classList.remove('active')); document.getElementById(id).classList.add('active'); document.querySelectorAll('.ni').forEach(n=>n.classList.remove('ani')); el.classList.add('ani'); }
+function previewImage(input) { if (input.files && input.files[0]) { let reader = new FileReader(); reader.onload = function(e) { document.getElementById('p-img').src = e.target.result; document.getElementById('p-img').style.display = 'block'; document.getElementById('p-icon').style.display = 'none'; db.setItem("user_profile_pic", e.target.result); }; reader.readAsDataURL(input.files[0]); } }
+function logout(){ db.clear(); location.reload(); }
+function share(){ window.open("https://wa.me/?text=Join Trico Network!"); }
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
